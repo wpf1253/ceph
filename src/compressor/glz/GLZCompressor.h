@@ -1,16 +1,5 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
 // vim: ts=8 sw=2 smarttab
-/*
- * Ceph - scalable distributed file system
- *
- * Copyright (C) 2017 Haomai Wang <haomaiwang@gmail.com>
- *
- * This is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 2.1, as published by the Free Software 
- * Foundation.  See file COPYING.
- *
- */
 
 #ifndef CEPH_GLZCOMPRESSOR_H
 #define CEPH_GLZCOMPRESSOR_H
@@ -31,12 +20,6 @@ class GLZCompressor : public Compressor {
   GLZCompressor(CephContext* cct) : Compressor(COMP_ALG_GLZ, "glz"), cct(cct) {}
 
   int compress(const bufferlist &src, bufferlist &dst, boost::optional<int32_t> &compressor_message) override {
-    // older versions of liblz4 introduce bit errors when compressing
-    // fragmented buffers.  this was fixed in lz4 commit
-    // af127334670a5e7b710bbd6adb71aa7c3ef0cd72, which first
-    // appeared in v1.8.2.
-    //
-    // workaround: rebuild if not contiguous.
     if (!src.is_contiguous()) {
       bufferlist new_src = src;
       new_src.rebuild();
@@ -50,9 +33,9 @@ class GLZCompressor : public Compressor {
     const char *data;
     unsigned num = src.get_num_buffers();
     encode((uint32_t)num, dst);
-    glz_encoder* glz_stream;
+    glz_encoder* glz_stream = nullptr;
     glz_stream = gkz_compress_initial((long unsigned)left);
-    if (glz_stream == NULL) {
+    if (glz_stream == nullptr) {
 	    return -2
     }
     encode_model glz_mode = GLZ_FAST;
