@@ -21,6 +21,7 @@ endif()
 if(HAVE_BROTLI)
   add_subdirectory(brotli)
 endif()
+add_subdirectory(glz)
 
 set(ceph_compressor_libs
     ceph_snappy
@@ -34,6 +35,6 @@ endif()
 if(HAVE_BROTLI)
   list(APPEND ceph_compressor_libs ceph_brotli)
 endif()
-
+list(APPEND ceph_compressor_libs ceph_glz)
 add_custom_target(compressor_plugins DEPENDS
     ${ceph_compressor_libs})
