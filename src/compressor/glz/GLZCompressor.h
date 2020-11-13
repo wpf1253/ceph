@@ -34,9 +34,9 @@ class GLZCompressor : public Compressor {
     unsigned num = src.get_num_buffers();
     encode((uint32_t)num, dst);
     glz_encoder* glz_stream = nullptr;
-    glz_stream = gkz_compress_initial((long unsigned)left);
+    glz_stream = glz_compress_initial((long unsigned)left);
     if (glz_stream == nullptr) {
-	    return -2
+	    return -2;
     }
     encode_model glz_mode = GLZ_FAST;
     if (cct->_conf->compressor_glz_level == GLZ_HIGH_CR){
@@ -46,7 +46,7 @@ class GLZCompressor : public Compressor {
       uint32_t origin_len = p.get_ptr_and_advance(left, &data);
       int compressed_len = glz_compress_default((glz_encoder *const)glz_stream,outptr.c_str()+pos,outptr.length()-pos,data,origin_len,glz_mode,GLZ_DEFAULT_LEVEL);
       if (compressed_len <= 0) {
-	glz_compress_delete(&glz_stream)
+	glz_compress_delete(&glz_stream);
         return -1;
     }
       pos += compressed_len;
@@ -56,7 +56,7 @@ class GLZCompressor : public Compressor {
   }
   ceph_assert(p.end());
   compressor_message = cct->_conf->compressor_glz_level;
-  dist.append(outptr, 0, pos);
+  dst.append(outptr, 0, pos);
   glz_compress_delete(&glz_stream);
  return 0;
 } 
@@ -69,12 +69,12 @@ class GLZCompressor : public Compressor {
   int decompress(bufferlist::const_iterator &p,
 		 size_t compressed_len,
 		 bufferlist &dst, boost::optional<int32_t> compressor_message) override {
-	  uint32_t compressed_len,
+	  uint32_t count;
 	  std::vector<std::pair<uint32_t,uint32_t> > compressed_pairs;
 	  decode(count, p);
 	  compressed_pairs.resize(count);
 	  uint32_t total_origin = 0;
-	  for (unsigned i = 0;i < conut; ++i){
+	  for (unsigned i = 0;i < count; ++i){
 	  	decode(compressed_pairs[i].first, p);
 		decode(compressed_pairs[i].second, p);
 		total_origin += compressed_pairs[i].first;
@@ -85,12 +85,12 @@ class GLZCompressor : public Compressor {
 	  bufferptr *ptr = &cur_ptr;
 	  Tub<bufferptr> data_holder;
 	  if (compressed_len != cur_ptr.length()) {
-	    data.holder.construct(compressed_len);
+	    data_holder.construct(compressed_len);
 	    p.copy_deep(compressed_len, *data_holder);
-	    ptr = data_holder.get()
+	    ptr = data_holder.get();
 	  }
-	  char *c_in = ptr->c_str()
-	  char *c_out = dstptr.c_str()
+	  char *c_in = ptr->c_str();
+	  char *c_out = dstptr.c_str();
 	  encode_model glz_mode = GLZ_FAST;
 	  if (*compressor_message == GLZ_HIGH_CR) {
 	    glz_mode = GLZ_HIGH_CR;
@@ -101,12 +101,12 @@ class GLZCompressor : public Compressor {
 			  c_in += compressed_pairs[i].second;
 			  c_out += compressed_pairs[i].first;
 		  } else if (r < 0) {
-			  return -1
+			  return -1;
 		  } else { 
-			  return -2
+			  return -2;
 		  }
 	  }
-	  dst.push_back(std::move(desptr));
+	  dst.push_back(std::move(dstptr));
 	  return 0;
   }
 };

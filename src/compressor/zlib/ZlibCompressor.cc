@@ -65,7 +65,7 @@ int ZlibCompressor::zlib_compress(const bufferlist &in, bufferlist &out, boost::
          << ret << " instead of Z_OK" << dendl;
     return -1;
   }
-  compressor_message = cct->_conf->compressor_zlib-winsize;
+  compressor_message = cct->_conf->compressor_zlib_winsize;
   for (ceph::bufferlist::buffers_t::const_iterator i = in.buffers().begin();
       i != in.buffers().end();) {
 

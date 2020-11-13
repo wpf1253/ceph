@@ -52,8 +52,8 @@ public:
         g_conf().set_val("compressor_glz_level", "0");
 	g_ceph_context->_conf.apply_changes(nullptr);
       } else if (isal == "level1") {
-	g.conf().set_val("compressor_glz_level", "1");
-	g-ceph_context->_conf.apply_changes(nullptr);
+	g_conf().set_val("compressor_glz_level", "1");
+	g_ceph_context->_conf.apply_changes(nullptr);
       }
       else {
 	ceph_abort_msg("bad option");
