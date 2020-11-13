@@ -39,7 +39,7 @@ class GLZCompressor : public Compressor {
 	    return -2;
     }
     encode_model glz_mode = GLZ_FAST;
-    if (cct->_conf->compressor_glz_level == GLZ_HIGH_CR){
+    if (cct->_conf->compressor_glz_level == GLZ_HIGH_CR) {
 	    glz_mode = GLZ_HIGH_CR;
     }
     while (left) {
@@ -68,13 +68,14 @@ class GLZCompressor : public Compressor {
 
   int decompress(bufferlist::const_iterator &p,
 		 size_t compressed_len,
-		 bufferlist &dst, boost::optional<int32_t> compressor_message) override {
+		 bufferlist &dst,
+		 boost::optional<int32_t> compressor_message) override {
 	  uint32_t count;
 	  std::vector<std::pair<uint32_t,uint32_t> > compressed_pairs;
 	  decode(count, p);
 	  compressed_pairs.resize(count);
 	  uint32_t total_origin = 0;
-	  for (unsigned i = 0;i < count; ++i){
+	  for (unsigned i = 0;i < count; ++i) {
 	  	decode(compressed_pairs[i].first, p);
 		decode(compressed_pairs[i].second, p);
 		total_origin += compressed_pairs[i].first;
