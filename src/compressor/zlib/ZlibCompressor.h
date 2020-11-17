@@ -34,12 +34,12 @@ public:
 #endif
   }
 
-  int compress(const bufferlist &in, bufferlist &out) override;
-  int decompress(const bufferlist &in, bufferlist &out) override;
-  int decompress(bufferlist::const_iterator &p, size_t compressed_len, bufferlist &out) override;
+  int compress(const bufferlist &in, bufferlist &out, boost::optional<int32_t> &compressor_message) override;
+  int decompress(const bufferlist &in, bufferlist &out, boost::optional<int32_t> compressor_message) override;
+  int decompress(bufferlist::const_iterator &p, size_t compressed_len, bufferlist &out, boost::optional<int32_t> compressor_message) override;
 private:
-  int zlib_compress(const bufferlist &in, bufferlist &out);
-  int isal_compress(const bufferlist &in, bufferlist &out);
+  int zlib_compress(const bufferlist &in, bufferlist &out, boost::optional<int32_t> &compressor_message);
+  int isal_compress(const bufferlist &in, bufferlist &out, boost::optional<int32_t> &compressor_message);
  };
 
 

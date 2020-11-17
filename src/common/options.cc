@@ -816,6 +816,16 @@ std::vector<Option> get_global_options() {
     .set_default(5)
     .set_description("Zlib compression level to use"),
 
+    Option("compressor_zlib_winsize", Option::TYPE_INT, Option::LEVEL_ADVANCED)
+    .set_default(-15)
+    .set_min_max(-15,32)
+    .set_description("Zlib compression winsize to use"),
+
+    Option("compressor_glz_level", Option::TYPE_INT, Option::LEVEL_ADVANCED)
+    .set_default(0)
+    .set_min_max(0,1)
+    .set_description("glz compression winsize to use"),
+
     Option("qat_compressor_enabled", Option::TYPE_BOOL, Option::LEVEL_ADVANCED)
     .set_default(false)
     .set_description("Enable Intel QAT acceleration support for compression if available"),
@@ -4561,7 +4571,7 @@ std::vector<Option> get_global_options() {
 
     Option("bluestore_compression_algorithm", Option::TYPE_STR, Option::LEVEL_ADVANCED)
     .set_default("snappy")
-    .set_enum_allowed({"", "snappy", "zlib", "zstd", "lz4"})
+    .set_enum_allowed({"", "snappy", "zlib", "zstd", "lz4", "glz"})
     .set_flag(Option::FLAG_RUNTIME)
     .set_description("Default compression algorithm to use when writing object data")
     .set_long_description("This controls the default compressor to use (if any) if the per-pool property is not set.  Note that zstd is *not* recommended for bluestore due to high CPU overhead when compressing small amounts of data."),
