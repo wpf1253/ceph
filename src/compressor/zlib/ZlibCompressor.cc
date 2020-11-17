@@ -65,7 +65,7 @@ int ZlibCompressor::zlib_compress(const bufferlist &in, bufferlist &out, boost::
          << ret << " instead of Z_OK" << dendl;
     return -1;
   }
-  compressor_message = cct->conf->compressor_zlib_winsize;
+  compressor_message = cct->_conf->compressor_zlib_winsize;
  
   for (ceph::bufferlist::buffers_t::const_iterator i = in.buffers().begin();
       i != in.buffers().end();) {
@@ -179,7 +179,7 @@ int ZlibCompressor::compress(const bufferlist &in, bufferlist &out, boost::optio
 #endif
 }
 
-int ZlibCompressor::decompress(bufferlist::const_iterator &p, size_t compressed_size, bufferlist &out)
+int ZlibCompressor::decompress(bufferlist::const_iterator &p, size_t compressed_size, bufferlist &out, boost::optional<int32_t> compressor_message)
 {
 #ifdef HAVE_QATZIP
   if (qat_enabled)

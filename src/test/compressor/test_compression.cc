@@ -266,7 +266,7 @@ TEST_P(CompressorTest, sharded_input_decompress)
   int len = test.size();
   bufferlist in, out;
   in.append(test.c_str(), len);
-  bosst::optional<int32_t> compressor_message;
+  boost::optional<int32_t> compressor_message;
   int res = compressor->compress(in, out, compressor_message);
   EXPECT_EQ(res, 0);
   EXPECT_GT(out.length(), small_prefix_size);
