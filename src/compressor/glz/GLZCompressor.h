@@ -26,10 +26,11 @@
 #define GLZ_DEFAULT_LEVEL 1
 
 class GLZCompressor : public Compressor {
- CepjContext *const cct;
+ CephContext *const cct;
 
   public:
-  GLZCompressor(CephContext* cct) : Compressor(COMP_ALG_GLZ, "glz") {
+  GLZCompressor(CephContext* cct) : Compressor(COMP_ALG_GLZ, "glz"), cct(cct) {}
+  ~GLZCompressor() {}
 
   int compress(const bufferlist &src, bufferlist &dst, boost::optional<int32_t> &compressor_message) override {
 
@@ -38,17 +39,17 @@ class GLZCompressor : public Compressor {
       new_src.rebuild();
       return compress(new_src, dst, compressor_message);
     }
-    bufferptr outptr = buffer::create_small_page_aligned(src.length())
+    bufferptr outptr = buffer::create_small_page_aligned(src.length());
 
     auto p = src.begin();
     size_t left = src.length();
     int pos = 0;
-    const char *data;
+    const char *data = nullptr;
     unsigned num = src.get_num_buffers();
     encode((uint32_t)num, dst);
-    glz_encoder* glz_stream;
+    glz_encoder* glz_stream = nullptr;
     glz_stream = glz_compress_initial((long unsigned)left);
-    if (glz_stream == NULL) {
+    if (glz_stream == nullptr) {
 	return -2;
     }
     encode_model glz_mode = GLZ_FAST;
