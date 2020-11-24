@@ -1123,6 +1123,7 @@ void bluestore_compression_header_t::dump(Formatter *f) const
   f->dump_unsigned("length", length);
   if (compressor_message) {
     f->dump_int("compressor_message", *compressor_message);
+  }
 }
 
 void bluestore_compression_header_t::generate_test_instances(
