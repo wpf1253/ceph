@@ -59,7 +59,7 @@ class GLZCompressor : public Compressor {
 
     while (left) {
       uint32_t origin_len = p.get_ptr_and_advance(left, &data);
-      int compressed_len = glz_compress_default((glz_encoder *const)glz_stream, outptr.c_str()+pos, outptr.length()-pos, data, origin_len, glz_mode, GLZ_DEFAULT_LEVEL);
+      int compressed_len = glz_compress_default((const glz_encoder *const)glz_stream, outptr.c_str()+pos, outptr.length()-pos, data, origin_len, glz_mode, GLZ_DEFAULT_LEVEL);
       if (compressed_len <= 0){ 
         glz_compress_delete(&glz_stream);
 	return -1;
@@ -116,7 +116,7 @@ class GLZCompressor : public Compressor {
        glz_mode = GLZ_HIGH_CR;
     }
     for (unsigned i = 0; i < count; ++i) {
-      int r = glz_decompress_default(c_in, c_out, compressed_pairs[i].first, c_in, compressed_pairs[i].second,glz_mode);
+      int r = glz_decompress_default((const glz_encoder *const)c_in, c_out, compressed_pairs[i].first, c_in, compressed_pairs[i].second,glz_mode);
       if (r == (int)compressed_pairs[i].first) {
         c_in += compressed_pairs[i].second;
         c_out += compressed_pairs[i].first;
